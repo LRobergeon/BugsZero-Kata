@@ -38,3 +38,4 @@ By Arlo Belshee
 
 ## Contribute
 Contributions of all forms are welcome. Submit another language by fork/merge-request. If you're missing something or hava a question please create an issue.
+...
