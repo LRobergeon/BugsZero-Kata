@@ -19,32 +19,37 @@ public class Game {
     
     public  Game(){
     	for (int i = 0; i < 50; i++) {
-			popQuestions.addLast("Pop Question " + i);
-			scienceQuestions.addLast(("Science Question " + i));
-			sportsQuestions.addLast(("Sports Question " + i));
-			rockQuestions.addLast(createRockQuestion(i));
+			// Il faut être conforme dans les developpements, utiliser des fonctions partout
+			// On peu aussi factoriser les appels
+			// On pourrai définir les strings dans un fichier de constante,
+			// cela évite d'avoir à les chercher partout dans le code si on doit les modifiers
+			popQuestions.addLast(createQuestions("Pop Question ", i));
+			scienceQuestions.addLast(createQuestions("Science Question ", i));
+			sportsQuestions.addLast(createQuestions("Sports Question ", i));
+			rockQuestions.addLast(createQuestions("Rock Question ", i));
     	}
     }
 
-	public String createRockQuestion(int index){
-		return "Rock Question " + index;
+	public String createQuestions(String typeQuestion, int index){
+		return typeQuestion + " " + index;
 	}
 
 	public boolean isPlayable() {
-		return (howManyPlayers() >= 2);
+		return players.size() >= 2;
 	}
 
-	public boolean add(String playerName) {
+	// Pas besoin de return un boolean
+	public void add(String playerName) {
 		
 		
 	    players.add(playerName);
-	    places[howManyPlayers()] = 0;
-	    purses[howManyPlayers()] = 0;
-	    inPenaltyBox[howManyPlayers()] = false;
+		// Utiliser directement players.size() plutôt que howManyPlayers(), qui est plus perturbant
+	    places[players.size()] = 0;
+	    purses[players.size()] = 0;
+	    inPenaltyBox[players.size()] = false;
 	    
 	    System.out.println(playerName + " was added");
 	    System.out.println("They are player number " + players.size());
-		return true;
 	}
 	
 	public int howManyPlayers() {
@@ -54,7 +59,7 @@ public class Game {
 	public void roll(int roll) {
 		System.out.println(players.get(currentPlayer) + " is the current player");
 		System.out.println("They have rolled a " + roll);
-		
+
 		if (inPenaltyBox[currentPlayer]) {
 			if (roll % 2 != 0) {
 				isGettingOutOfPenaltyBox = true;
@@ -64,7 +69,7 @@ public class Game {
 			} else {
 				System.out.println(players.get(currentPlayer) + " is not getting out of the penalty box");
 				isGettingOutOfPenaltyBox = false;
-				}
+			}
 			
 		} else {
 
@@ -75,6 +80,7 @@ public class Game {
 
 	private void movePlayerAndAskQuestion(int roll) {
 		places[currentPlayer] = places[currentPlayer] + roll;
+		// Utiliser un modulo
 		if (places[currentPlayer] > 11) places[currentPlayer] = places[currentPlayer] - 12;
 
 		System.out.println(players.get(currentPlayer)
@@ -97,23 +103,30 @@ public class Game {
 	
 	
 	private String currentCategory() {
-		if (places[currentPlayer] == 0) return "Pop";
-		if (places[currentPlayer] == 4) return "Pop";
-		if (places[currentPlayer] == 8) return "Pop";
-		if (places[currentPlayer] == 1) return "Science";
-		if (places[currentPlayer] == 5) return "Science";
-		if (places[currentPlayer] == 9) return "Science";
-		if (places[currentPlayer] == 2) return "Sports";
-		if (places[currentPlayer] == 6) return "Sports";
-		if (places[currentPlayer] == 10) return "Sports";
-		return "Rock";
+		int place = places[currentPlayer];
+		// Ne pas mettre dans le désordre, mais surtout regroupé et factorisé
+		// On peu utiliser un modulo aussi pour améliorer les conditions
+		// if(place == 0 || place == 4 || place == 8){
+		if(place % 4 == 0){
+			return "Pop";
+		} else if(place % 4 == 1){
+			return "Science";
+		} else if(place % 4 == 2){
+			return "Sports";
+		} else {
+			return "Rock";
+		}
 	}
 
 	public boolean wasCorrectlyAnswered() {
+		// On peu factoriser certaines partie du code
 		if (inPenaltyBox[currentPlayer]){
 			if (isGettingOutOfPenaltyBox) {
+				// On peu factoriser cette partie ou la réponse est correcte, par exemple l'extraire en fonction (ou refacto les if)
+				// et utiliser cette fonction ici et dans le else à la ligne 144, car les 2 font la même chose
 				System.out.println("Answer was correct!!!!");
 				currentPlayer++;
+				// Faire un modulo (On pourrais extraire cette methode dans une fonction car on l'utilise à plusieurs endroits)
 				if (currentPlayer == players.size()) currentPlayer = 0;
 				purses[currentPlayer]++;
 				System.out.println(players.get(currentPlayer)
@@ -121,17 +134,12 @@ public class Game {
 						+ purses[currentPlayer]
 						+ " Gold Coins.");
 
-				boolean winner = didPlayerWin();
-
-				return winner;
 			} else {
 				currentPlayer++;
+				// Faire un modulo
 				if (currentPlayer == players.size()) currentPlayer = 0;
-				return true;
 			}
-			
-			
-			
+
 		} else {
 		
 			System.out.println("Answer was corrent!!!!");
@@ -140,13 +148,13 @@ public class Game {
 					+ " now has "
 					+ purses[currentPlayer]
 					+ " Gold Coins.");
-			
-			boolean winner = didPlayerWin();
+
 			currentPlayer++;
+			// Utiliser un modulo
 			if (currentPlayer == players.size()) currentPlayer = 0;
-			
-			return winner;
+
 		}
+		return didPlayerWin();
 	}
 	
 	public boolean wrongAnswer(){
@@ -155,12 +163,15 @@ public class Game {
 		inPenaltyBox[currentPlayer] = true;
 		
 		currentPlayer++;
+		// Utiliser un modulo plutôt que ce If
 		if (currentPlayer == players.size()) currentPlayer = 0;
+		// On renvoie toujours True, on peu définir la variable utilisé plus haut à True directement
 		return true;
 	}
 
 
 	private boolean didPlayerWin() {
-		return !(purses[currentPlayer] == 6);
+		// Plus simple comme cela
+		return purses[currentPlayer] < 6;
 	}
 }

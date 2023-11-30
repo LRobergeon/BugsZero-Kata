@@ -38,4 +38,9 @@ By Arlo Belshee
 
 ## Contribute
 Contributions of all forms are welcome. Submit another language by fork/merge-request. If you're missing something or hava a question please create an issue.
-...
+
+
+Remarques sur le tests :
+1) Il y a des .gitIgnores partout, il faut laisser seulement celui à la racine
+2) Il n'y a aucun commentaire dans le code (aucun détail sur ce que les fonctions font)
+3) J'aime bien afficher les strings (pour les logs ou error), à partir de fichier de conf des variables

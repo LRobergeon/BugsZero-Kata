@@ -24,4 +24,18 @@ public class GameTest {
         Approvals.verify(resultStream.toString());
 
 	}
+
+    /**
+     * Ajouter d'autres tests
+     *
+     * Par exemple tester le fonctionnement du programme
+     * Verifier si après une bonne réponse, on a bien 1 morceau du trivial poursuite
+     * Verifier 0 morceau si erreur
+     *
+     * Verifier les cas possible d'erreur (Il se passe quoi si on a tiré toute les questions pop ?)
+     *
+     *
+     */
+
+
 }
